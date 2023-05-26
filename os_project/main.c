@@ -51,12 +51,21 @@ void init_argv(char* (*argv)[])
     }
 }
 
+void cnt_argc(int argc, char* argv[])
+{    
+    while(argv[argc] != NULL){
+        argc++;
+    }
+    //printf("%d\n", argc);
+}
+
 int main()
 {   
     int i;
     char buf[1024];
     char command[1024];
     char *argv[MAX_ARGC] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,}; // 크기가 10인 포인터배열
+    int argc = 0;
     char *temp;
     pid_t pid;
     int status;
@@ -123,11 +132,8 @@ int main()
         }
         else if (!strcmp(argv[0], "mkdir")) // 디렉토리 생성
         {
-            int argc = 0;
-            while((*argv)[argc] != NULL)
-            {
-                argc++;
-            }
+            cnt_argc(argc, argv);
+
             if (argc > 2) {
                 if (!strcmp(argv[1], "-m"))//접근권한을 본인이 설정할 수 있는 옵션
                 {
@@ -135,30 +141,25 @@ int main()
                 }
                 else if (!strcmp(argv[1], "-p"))//상위디렉토리도함께 생성.
                 {
-                    Omkdir(argv[1], argv[2], "755");
+                    Omkdir(argv[1], argv[2], "777");
                 }
                 else
                     Mmkdir(argc, argv);
             }
-            else
-                Omkdir("", argv[1], "755");
+            else{
+                Omkdir("", argv[1], "777");
+            }
+                
         }
         else if (!strcmp(argv[0], "rmdir"))
         {
-            int argc = 0;
-            while((*argv)[argc] != NULL)
-            {
-                argc++;
-            }
+            cnt_argc(argc, argv);
             RMDIR(argc, argv);
         }
         else if (strcmp(argv[0], "cat") == 0)
         {
-            int argc = 0;
-            while((*argv)[argc] != NULL)
-            {
-                argc++;
-            }
+            cnt_argc(argc, argv);
+
             if (argc == 2)
                 Cat(argc, "", argv[1]);
             if (argc == 3)
